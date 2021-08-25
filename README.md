@@ -25,7 +25,7 @@ You need to run the application on a cloud provider: you could run it locally bu
 First, you need to configure it. All configuration happens in the `.env` file.
 
 **Creating the Slack App**
-You need to [create a Slack App](https://api.slack.com/apps?new_app=1) in your workspace. Select the `From an app manifest` option.
+You need to [create a Slack App](https://api.slack.com/apps?new_app=1) in your workspace. Select the `From an app manifest` option, but first replace all the `YOUR_APP_URL` by the URL by which your application will be accessible.
 
 You'll be asked to verify the event URL. On your server, run `./node_modules/.bin/slack-verify --secret <SLACK_SIGNING_SECRET>`. You can close this app when the verification is succesfull.
 
