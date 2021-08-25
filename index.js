@@ -23,7 +23,7 @@ const welcomeMessagePart2 = process.env.WELCOME_PART2;
 
       try {
         //Retrieve the ID for the direct message to the new member
-        let result = await app.client.im.open({
+        let result = await app.client.conversations.open({
           token: context.botToken,
           user: engagementUserId
         });
@@ -77,7 +77,7 @@ const welcomeMessagePart2 = process.env.WELCOME_PART2;
 
     try {
         //Retrieve the ID for the direct message to the new member
-        let result = await app.client.im.open({
+        let result = await app.client.conversations.open({
           token: engagementUserToken,
           user: newUser[0]
         });
