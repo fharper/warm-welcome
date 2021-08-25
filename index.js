@@ -16,22 +16,22 @@ const welcomeMessagePart2 = "! How are you? I'm Fred, Senior Developer Advocate 
   // Start the app
   await app.start(process.env.PORT || 3000);
 
-  console.log('⚡️ Welcome Hatch app is running!');
+  console.log('⚡️ Warm-welcome is running!');
 
   //team_join
   app.event('team_join', async ({ event, context }) => {
 
       try {
-        //Retrieve the ID for the direct message to the Hatch person
+        //Retrieve the ID for the direct message to the new member
         let result = await app.client.im.open({
           token: context.botToken,
           user: engagementUserId
         });
 
         let imChannelId = result.channel.id;
-        let message = event.user.real_name + ' joined Hatch!';
+        let message = event.user.real_name + ' joined Slack!';
 
-        //Message the Hatch person
+        //Message the new member
         result = await app.client.chat.postMessage({
           token: context.botToken,
           channel: imChannelId,
@@ -76,7 +76,7 @@ const welcomeMessagePart2 = "! How are you? I'm Fred, Senior Developer Advocate 
     let newUser = action.value.split(",");
 
     try {
-        //Retrieve the ID for the direct message to the new Hatch member
+        //Retrieve the ID for the direct message to the new member
         let result = await app.client.im.open({
           token: engagementUserToken,
           user: newUser[0]
