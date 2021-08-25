@@ -25,7 +25,7 @@ const welcomeMessagePart2 = process.env.WELCOME_PART2;
         //Retrieve the ID for the direct message to the new member
         let result = await app.client.conversations.open({
           token: context.botToken,
-          user: engagementUserId
+          users: engagementUserId
         });
 
         let imChannelId = result.channel.id;
@@ -79,7 +79,7 @@ const welcomeMessagePart2 = process.env.WELCOME_PART2;
         //Retrieve the ID for the direct message to the new member
         let result = await app.client.conversations.open({
           token: engagementUserToken,
-          user: newUser[0]
+          users: newUser[0]
         });
         let imChannelId = result.channel.id;
 
