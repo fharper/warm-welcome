@@ -96,11 +96,10 @@ const welcomeMessagePart2 = process.env.WELCOME_PART2;
         replace_original: true
       });
 
-  }
-  catch (error) {
-    console.error(error);
-  }
-  
+    }
+    catch (error) {
+      console.error(error);
+    }
   });
 
   //Test
