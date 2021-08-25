@@ -7,10 +7,10 @@ const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET,
     token: process.env.SLACK_BOT_TOKEN
 });
-const engagementUserId = process.env.HATCH_USER_ID;
-const engagementUserToken = process.env.HATCH_USER_TOKEN;
-const welcomeMessagePart1 = "Welcome to Hatch "
-const welcomeMessagePart2 = "! How are you? I'm Fred, Senior Developer Advocate at DigitalOcean. I highly encourage you to introduce yourself into the #introductions channel and there is no shame in self-promotion here: please let others know what you are doing in the startup world... I also want to let you know that if you have any question, feel free to ask in the different channel or direct message me. Lastly, if you want to discuss about your technical stack, how you pitch your startup or anything else technical, you can schedule office hours with me at https://do.co/hatch_fharper .";
+const engagementUserId = process.env.YOUR_USER_ID;
+const engagementUserToken = process.env.YOUR_USER_TOKEN;
+const welcomeMessagePart1 = process.env.WELCOME_PART1
+const welcomeMessagePart2 = process.env.WELCOME_PART2;
 
 (async () => {
   // Start the app
