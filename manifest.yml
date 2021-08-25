@@ -1,0 +1,38 @@
+_metadata:
+  major_version: 1
+  minor_version: 1
+display_information:
+  name: warm-welcome
+  description: Welcome new members easily
+  background_color: "#000000"
+features:
+  bot_user:
+    display_name: warm-welcome
+    always_online: true
+oauth_config:
+  redirect_urls:
+    - YOUR_APP_URL/slack
+  scopes:
+    user:
+      - chat:write
+      - im:write
+      - users:read
+    bot:
+      - im:write
+      - users:read
+      - chat:write
+      - im:history
+settings:
+  event_subscriptions:
+    request_url: YOUR_APP_URL/slack/events
+    user_events:
+      - team_join
+    bot_events:
+      - message.im
+      - team_join
+  interactivity:
+    is_enabled: true
+    request_url: YOUR_APP_URL/slack/events
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
