@@ -87,6 +87,7 @@ const welcomeMessagePart2 = process.env.WELCOME_PART2;
       result = await app.client.chat.postMessage({
         token: engagementUserToken,
         channel: imChannelId,
+        link_names: true,
         text: welcomeMessagePart1 + newUser[1].split(" ")[0] + welcomeMessagePart2,
         as_user: 'yes'
       });
