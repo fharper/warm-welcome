@@ -16,7 +16,7 @@
   "author": "Frédéric Harper",
   "license": "ISC",
   "dependencies": {
-    "@slack/bolt": "^3.6.0",
+    "@slack/bolt": "^3.8.1",
     "@slack/events-api": "^3.0.1",
     "dotenv": "^8.6.0",
     "express": "^4.17.1"
