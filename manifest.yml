@@ -11,7 +11,7 @@ features:
     always_online: true
 oauth_config:
   redirect_urls:
-    - YOUR_APP_URL/slack
+    - YOUR-APP-DOMAIN-GOES.HERE/slack
   scopes:
     user:
       - chat:write
@@ -24,7 +24,7 @@ oauth_config:
       - im:history
 settings:
   event_subscriptions:
-    request_url: YOUR_APP_URL/slack/events
+    request_url: YOUR-APP-DOMAIN-GOES.HERE/slack/events
     user_events:
       - team_join
     bot_events:
@@ -32,7 +32,7 @@ settings:
       - team_join
   interactivity:
     is_enabled: true
-    request_url: YOUR_APP_URL/slack/events
+    request_url: YOUR-APP-DOMAIN-GOES.HERE/slack/events
   org_deploy_enabled: false
   socket_mode_enabled: false
   token_rotation_enabled: false
