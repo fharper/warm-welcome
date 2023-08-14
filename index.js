@@ -12,6 +12,17 @@ const engagementUserToken = process.env.YOUR_USER_TOKEN;
 const welcomeMessagePart1 = process.env.WELCOME_PART1;
 const welcomeMessagePart2 = process.env.WELCOME_PART2;
 
+function titleCase(str) {
+    str = str.toLowerCase();
+    str = str.split(' ');
+
+    for (var i = 0; i < str.length; i++) {
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+    }
+
+    return str.join(' ');
+}
+
 (async () => {
     // Start the app
     await app.start(process.env.PORT || 3000);
@@ -94,7 +105,7 @@ const welcomeMessagePart2 = process.env.WELCOME_PART2;
                 token: engagementUserToken,
                 channel: imChannelId,
                 link_names: true,
-                text: welcomeMessagePart1 + newUser[1].split(' ')[0] + welcomeMessagePart2,
+                text: welcomeMessagePart1 + titleCase(newUser[1].split(' ')[0]) + welcomeMessagePart2,
                 as_user: 'yes'
             });
 
