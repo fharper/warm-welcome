@@ -1,0 +1,32 @@
+---
+name: Validate Node.js code
+on: [push, workflow_dispatch]
+
+jobs:
+  nodejs-check:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout this repository
+        uses: actions/checkout@master
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.7.0
+        with:
+          node-version: v19.6.0
+          cache: npm
+
+      - name: Install ESLint
+        run: npm install -g eslint
+
+      - name: Install ESLint configurations dependencies
+        run: npm install eslint-config-standard eslint-plugin-import eslint-plugin-n eslint-plugin-promise eslint-formatter-pretty
+
+      - name: Download .eslintrc.yml
+        uses: suisei-cn/actions-download-file@v1.4.0
+        with:
+          url: "https://raw.githubusercontent.com/fharper/gh-configs/main/.eslintrc.yml"
+
+      # Rules https://eslint.org/docs/latest/rules/
+      - name: Run ESLint
+        run: eslint .  --format=pretty --ext .js
