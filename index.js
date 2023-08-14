@@ -9,103 +9,97 @@ const app = new App({
 });
 const engagementUserId = process.env.YOUR_USER_ID;
 const engagementUserToken = process.env.YOUR_USER_TOKEN;
-const welcomeMessagePart1 = process.env.WELCOME_PART1
+const welcomeMessagePart1 = process.env.WELCOME_PART1;
 const welcomeMessagePart2 = process.env.WELCOME_PART2;
 
 (async () => {
-  // Start the app
-  await app.start(process.env.PORT || 3000);
+    // Start the app
+    await app.start(process.env.PORT || 3000);
 
-  console.log('⚡️ Warm-welcome is running!');
+    console.log('⚡️ Warm-welcome is running!');
 
-  //team_join
-  app.event('team_join', async ({ event, context }) => {
+    // team_join
+    app.event('team_join', async ({ event, context }) => {
+        try {
+            // Retrieve the ID for the direct message to the new member
+            let result = await app.client.conversations.open({
+                token: context.botToken,
+                users: engagementUserId
+            });
 
-      try {
-        //Retrieve the ID for the direct message to the new member
-        let result = await app.client.conversations.open({
-          token: context.botToken,
-          users: engagementUserId
-        });
+            const imChannelId = result.channel.id;
+            const message = event.user.real_name + ' joined Slack!';
 
-        let imChannelId = result.channel.id;
-        let message = event.user.real_name + ' joined Slack!';
-
-        //Message the new member
-        result = await app.client.chat.postMessage({
-          token: context.botToken,
-          channel: imChannelId,
-          text: message,
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": message + " Welcome the new user now?"
-                }
-              },
-              {
-                "type": "actions",
-                "block_id": "welcomeFolks",
-                "elements": [
-                  {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "Now"
+            // Message the new member
+            result = await app.client.chat.postMessage({
+                token: context.botToken,
+                channel: imChannelId,
+                text: message,
+                blocks: [
+                    {
+                        type: 'section',
+                        text: {
+                            type: 'mrkdwn',
+                            text: message + ' Welcome the new user now?'
+                        }
                     },
-                    "style": "primary",
-                    "action_id": "welcome_new_user",
-                    "value": event.user.id + "," + event.user.real_name
-                  }
+                    {
+                        type: 'actions',
+                        block_id: 'welcomeFolks',
+                        elements: [
+                            {
+                                type: 'button',
+                                text: {
+                                    type: 'plain_text',
+                                    text: 'Now'
+                                },
+                                style: 'primary',
+                                action_id: 'welcome_new_user',
+                                value: event.user.id + ',' + event.user.real_name
+                            }
+                        ]
+                    }
                 ]
-              }
-            ]
-        });
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    });
 
-      }
-      catch (error) {
-        console.error(error);
-      }
-  });
+    // Listen to welcome_new_user
+    app.action('welcome_new_user', async ({ action, ack, respond }) => {
+        // ack();
 
-  //Listen to welcome_new_user
-  app.action('welcome_new_user', async ({ action, ack, respond }) => {
-    //ack();
+        const newUser = action.value.split(',');
 
-    let newUser = action.value.split(",");
+        try {
+            // Retrieve the ID for the direct message to the new member
+            let result = await app.client.conversations.open({
+                token: engagementUserToken,
+                users: newUser[0]
+            });
+            const imChannelId = result.channel.id;
 
-    try {
-        //Retrieve the ID for the direct message to the new member
-        let result = await app.client.conversations.open({
-          token: engagementUserToken,
-          users: newUser[0]
-        });
-        let imChannelId = result.channel.id;
+            // Send the welcome message
+            result = await app.client.chat.postMessage({
+                token: engagementUserToken,
+                channel: imChannelId,
+                link_names: true,
+                text: welcomeMessagePart1 + newUser[1].split(' ')[0] + welcomeMessagePart2,
+                as_user: 'yes'
+            });
 
-      //Send the welcome message
-      result = await app.client.chat.postMessage({
-        token: engagementUserToken,
-        channel: imChannelId,
-        link_names: true,
-        text: welcomeMessagePart1 + newUser[1].split(" ")[0] + welcomeMessagePart2,
-        as_user: 'yes'
-      });
+            respond({
+                text: 'Message sent to' + newUser[0],
+                replace_original: true
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    });
 
-      respond({
-        text: 'Message sent',
-        replace_original: true
-      });
-
-    }
-    catch (error) {
-      console.error(error);
-    }
-  });
-
-  //Test
-  app.message('fredisawesome', async ({ message, say}) => {
-    say('Hello');
-  });
-
+    // Test
+    app.message('fredisawesome', async ({ message, say }) => {
+        say('Hello');
+    });
 })();
