@@ -56,6 +56,16 @@ const welcomeMessagePart2 = process.env.WELCOME_PART2;
                                 style: 'primary',
                                 action_id: 'welcome_new_user',
                                 value: event.user.id + ',' + event.user.real_name
+                            },
+                            {
+                                type: 'button',
+                                text: {
+                                    type: 'plain_text',
+                                    text: 'Nope'
+                                },
+                                style: 'primary',
+                                action_id: 'cancel',
+                                value: event.user.real_name
                             }
                         ]
                     }
@@ -68,7 +78,6 @@ const welcomeMessagePart2 = process.env.WELCOME_PART2;
 
     // Listen to welcome_new_user
     app.action('welcome_new_user', async ({ action, ack, respond }) => {
-        // ack();
 
         const newUser = action.value.split(',');
 
@@ -91,6 +100,19 @@ const welcomeMessagePart2 = process.env.WELCOME_PART2;
 
             respond({
                 text: 'Message sent to *' + newUser[1] + '*',
+                replace_original: true
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    // Listen to cancelling
+    app.action('cancel', async ({ action, ack, respond }) => {
+
+        try {
+            respond({
+                text: 'Message *not* sent to ' + action.value,
                 replace_original: true
             });
         } catch (error) {
