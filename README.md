@@ -25,7 +25,7 @@ First, you need to run the application on a cloud provider: you could run it loc
 
 _Future versions of this app will probably use templating, so this stupid implementation of `WELCOME_PART1` & `WELCOME_PART2` will be things of the past._
 
-Once it's done, you can run the application using the `node index.js` command. You would be advised to run it as a service to ensure it's always running, and restart when there is an issue. Note that the app won't work at first as you need to update the other variables from the [.env file](.env)), but you won't be able to do it before you create the Slack application.
+Once it's done, you can run the application using the `node index.js` command. You would be advised to run it as a service to ensure it's always running, and restart when there is an issue (running it with something like [pm2](https://github.com/Unitech/pm2) `pm2 start index.js`). Note that the app won't work at first as you need to update the other variables from the [.env file](.env)), but you won't be able to do it before you create the Slack application.
 
 ### Slack Application
 
