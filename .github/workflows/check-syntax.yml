@@ -1,0 +1,51 @@
+---
+name: Syntax Validation
+on: [push, workflow_dispatch]
+
+jobs:
+  syntax-check:
+    name: vale
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@main
+
+      - name: Download .vale.ini
+        uses: suisei-cn/actions-download-file@v1.4.0
+        with:
+          url: "https://raw.githubusercontent.com/fharper/gh-configs/main/.vale.ini"
+
+      - name: Create the folders
+        run: |
+          mkdir -p styles && mkdir -p styles/Custom && mkdir -p styles/Vocab && mkdir -p styles/Vocab/base
+
+      - name: Download Custom Style ignore.txt
+        uses: suisei-cn/actions-download-file@v1.4.0
+        with:
+          url: "https://raw.githubusercontent.com/fharper/gh-configs/main/styles/Custom/ignore.txt"
+
+      - name: Download Custom Style spelling.yml
+        uses: suisei-cn/actions-download-file@v1.4.0
+        with:
+          url: "https://raw.githubusercontent.com/fharper/gh-configs/main/styles/Custom/spelling.yml"
+
+      - name: Download Custom Style substitutions.yml
+        uses: suisei-cn/actions-download-file@v1.4.0
+        with:
+          url: "https://raw.githubusercontent.com/fharper/gh-configs/main/styles/Custom/substitutions.yml"
+
+      - name: Download base Vocab accept.txt
+        uses: suisei-cn/actions-download-file@v1.4.0
+        with:
+          url: "https://raw.githubusercontent.com/fharper/gh-configs/main/styles/Vocab/base/accept.txt"
+
+      - name: Download base Vocab reject.txt
+        uses: suisei-cn/actions-download-file@v1.4.0
+        with:
+          url: "https://raw.githubusercontent.com/fharper/gh-configs/main/styles/Vocab/base/reject.txt"
+
+      - name: Validate the syntax
+        uses: errata-ai/vale-action@reviewdog
+        with:
+          fail_on_error: true
+          vale_flags: "--config=.vale.ini"
