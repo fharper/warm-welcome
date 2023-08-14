@@ -1,0 +1,23 @@
+---
+name: Dockerfile Validation
+on: [push, workflow_dispatch]
+
+jobs:
+  docker-check:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout this repository
+        uses: actions/checkout@master
+
+      - name: "Check if Dockerfile exist first"
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "Dockerfile"
+
+      # Rules at https://github.com/hadolint/hadolint#rules
+      # hadolint/hadolint-action is causing issue with act: https://github.com/hadolint/hadolint/issues/823
+      - name: Validate Dockerfile
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: docker run -v "$(pwd)":"/files" hadolint/hadolint:v2.12.0 hadolint /files/Dockerfile
