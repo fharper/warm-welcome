@@ -90,7 +90,7 @@ const welcomeMessagePart2 = process.env.WELCOME_PART2;
             });
 
             respond({
-                text: 'Message sent to' + newUser[0],
+                text: 'Message sent to *' + newUser[1] + '*',
                 replace_original: true
             });
         } catch (error) {
