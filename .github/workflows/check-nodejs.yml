@@ -8,25 +8,25 @@ jobs:
     steps:
 
       - name: Checkout this repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v4.1.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3.7.0
+        uses: actions/setup-node@v4.0.2
         with:
-          node-version: v19.6.0
+          node-version: v20.12.2
           cache: npm
 
       - name: Install ESLint
-        run: npm install -g eslint
+        run: npm install -g eslint@8.56.0
 
       - name: Install ESLint configurations dependencies
-        run: npm install eslint-config-standard eslint-plugin-import eslint-plugin-n eslint-plugin-promise eslint-formatter-pretty
+        run: npm install eslint-config-standard eslint-plugin-import eslint-plugin-n eslint-plugin-promise eslint-formatter-pretty@v5.0.0
 
       - name: Download .eslintrc.yml
-        uses: suisei-cn/actions-download-file@v1.4.0
+        uses: suisei-cn/actions-download-file@v1.6.0
         with:
           url: "https://raw.githubusercontent.com/fharper/gh-configs/main/.eslintrc.yml"
 
       # Rules https://eslint.org/docs/latest/rules/
       - name: Run ESLint
-        run: eslint .  --format=pretty --ext .js
+        run: eslint .  --format=pretty --config .eslintrc.yml  --ext .js
