@@ -8,7 +8,7 @@ jobs:
     steps:
 
       - name: Checkout this repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v4.1.4
 
       - name: "Check if Dockerfile exist first"
         id: check_files
