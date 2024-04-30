@@ -16,7 +16,7 @@ jobs:
           url: "https://raw.githubusercontent.com/fharper/gh-configs/main/.yamllint.yml"
 
       - name: Lint YAML files
-        uses: karancode/yamllint-github-action@master
+        uses: karancode/yamllint-github-action@v2.1.1
         with:
           yamllint_config_datapath: .yamllint.yml
           yamllint_strict: true
