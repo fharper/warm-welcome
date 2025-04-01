@@ -19,6 +19,6 @@
     "@slack/bolt": "^3.17.1",
     "@slack/events-api": "^3.0.1",
     "dotenv": "^8.6.0",
-    "express": "4.21.2"
+    "express": "5.1.0"
   }
 }
