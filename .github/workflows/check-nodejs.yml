@@ -23,7 +23,7 @@ jobs:
         run: npm install eslint-config-standard eslint-plugin-import eslint-plugin-n eslint-plugin-promise eslint-formatter-pretty@v5.0.0
 
       - name: Download .eslintrc.yml
-        uses: suisei-cn/actions-download-file@v1.6.0
+        uses: suisei-cn/actions-download-file@818d6b7dc8fe73f2f924b6241f2b1134ca1377d9 # v1.6.0
         with:
           url: "https://raw.githubusercontent.com/fharper/gh-configs/main/.eslintrc.yml"
 

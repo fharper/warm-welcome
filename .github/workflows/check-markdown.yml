@@ -10,12 +10,12 @@ jobs:
         uses: actions/checkout@v4.1.4
 
       - name: Download .markdownlint.json
-        uses: suisei-cn/actions-download-file@v1.4.0
+        uses: suisei-cn/actions-download-file@15306412d2c75df56b46844362b86b65235b7db1 # v1.4.0
         with:
           url: "https://raw.githubusercontent.com/fharper/gh-configs/main/.markdownlint.json"
 
       - name: Validate Markdown
-        uses: DavidAnson/markdownlint-cli2-action@v9
+        uses: DavidAnson/markdownlint-cli2-action@5b7c9f74fec47e6b15667b2cc23c63dff11e449e # v9
         with:
           command: config
           globs: |
