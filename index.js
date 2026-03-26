@@ -9,8 +9,12 @@ const app = new App({
 });
 const engagementUserId = process.env.YOUR_USER_ID;
 const engagementUserToken = process.env.YOUR_USER_TOKEN;
-const welcomeMessagePart1 = process.env.WELCOME_PART1;
-const welcomeMessagePart2 = process.env.WELCOME_PART2;
+const messages = [process.env.MESSAGE, process.env.MESSAGE_2, process.env.MESSAGE_3]
+    .filter(Boolean)
+    .map((msg, i) => {
+        const [label, ...rest] = msg.split('|||');
+        return { label: label.trim(), template: rest.join('|||').trim(), actionId: 'welcome_msg_' + i };
+    });
 
 function titleCase(str) {
     str = str.toLowerCase();
@@ -58,23 +62,23 @@ function titleCase(str) {
                         type: 'actions',
                         block_id: 'welcomeFolks',
                         elements: [
-                            {
+                            ...messages.map(msg => ({
                                 type: 'button',
                                 text: {
                                     type: 'plain_text',
-                                    text: 'Now'
+                                    text: msg.label
                                 },
                                 style: 'primary',
-                                action_id: 'welcome_new_user',
+                                action_id: msg.actionId,
                                 value: event.user.id + ',' + event.user.real_name
-                            },
+                            })),
                             {
                                 type: 'button',
                                 text: {
                                     type: 'plain_text',
                                     text: 'Nope'
                                 },
-                                style: 'primary',
+                                style: 'danger',
                                 action_id: 'cancel',
                                 value: event.user.real_name
                             }
@@ -87,39 +91,45 @@ function titleCase(str) {
         }
     });
 
-    // Listen to welcome_new_user
-    app.action('welcome_new_user', async ({ action, ack, respond }) => {
+    // Listen to welcome message buttons
+    messages.forEach(msg => {
+        app.action(msg.actionId, async ({ action, ack, respond }) => {
+            await ack();
 
-        const newUser = action.value.split(',');
+            const newUser = action.value.split(',');
 
-        try {
-            // Retrieve the ID for the direct message to the new member
-            let result = await app.client.conversations.open({
-                token: engagementUserToken,
-                users: newUser[0]
-            });
-            const imChannelId = result.channel.id;
+            try {
+                // Retrieve the ID for the direct message to the new member
+                let result = await app.client.conversations.open({
+                    token: engagementUserToken,
+                    users: newUser[0]
+                });
+                const imChannelId = result.channel.id;
 
-            // Send the welcome message
-            result = await app.client.chat.postMessage({
-                token: engagementUserToken,
-                channel: imChannelId,
-                link_names: true,
-                text: welcomeMessagePart1 + titleCase(newUser[1].split(' ')[0]) + welcomeMessagePart2,
-                as_user: 'yes'
-            });
+                // Send the welcome message
+                result = await app.client.chat.postMessage({
+                    token: engagementUserToken,
+                    channel: imChannelId,
+                    link_names: true,
+                    text: msg.template.replace('{{name}}', titleCase(newUser[1].split(' ')[0])),
+                    as_user: 'yes',
+                    unfurl_links: false,
+                    unfurl_media: false
+                });
 
-            respond({
-                text: 'Message sent to *' + newUser[1] + '*',
-                replace_original: true
-            });
-        } catch (error) {
-            console.error(error);
-        }
+                respond({
+                    text: '*' + msg.label + '* message sent to *' + newUser[1] + '*',
+                    replace_original: true
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        });
     });
 
     // Listen to cancelling
     app.action('cancel', async ({ action, ack, respond }) => {
+        await ack();
 
         try {
             respond({
