@@ -1,7 +1,6 @@
 display_information:
   name: warm-welcome
   description: Welcome new members easily
-  background_color: "#000000"
 features:
   bot_user:
     display_name: warm-welcome
