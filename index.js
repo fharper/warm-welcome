@@ -35,6 +35,10 @@ function titleCase(str) {
     return str.join(' ');
 }
 
+function escapeSlack(text) {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function logError(error) {
     console.error(error.code, error.message, error.data?.error ?? '');
 }
@@ -55,7 +59,7 @@ function logError(error) {
             });
 
             const imChannelId = result.channel.id;
-            const message = event.user.real_name + ' joined Slack!';
+            const message = escapeSlack(event.user.real_name) + ' joined Slack!';
 
             // Message the new member
             result = await app.client.chat.postMessage({
@@ -127,14 +131,14 @@ function logError(error) {
                     token: engagementUserToken,
                     channel: imChannelId,
                     link_names: true,
-                    text: msg.template.replace('{{name}}', titleCase(newUser[1].split(' ')[0])),
+                    text: msg.template.replace('{{name}}', escapeSlack(titleCase(newUser[1].split(' ')[0]))),
                     as_user: 'yes',
                     unfurl_links: false,
                     unfurl_media: false
                 });
 
                 await respond({
-                    text: '*' + msg.label + '* message sent to *' + newUser[1] + '*',
+                    text: '*' + msg.label + '* message sent to *' + escapeSlack(newUser[1]) + '*',
                     replace_original: true
                 });
             } catch (error) {
@@ -153,7 +157,7 @@ function logError(error) {
 
         try {
             await respond({
-                text: 'Message *not* sent to ' + action.value,
+                text: 'Message *not* sent to ' + escapeSlack(action.value),
                 replace_original: true
             });
         } catch (error) {
