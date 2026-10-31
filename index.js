@@ -60,6 +60,11 @@ process.on('unhandledRejection', error => {
     process.exit(1);
 });
 
+app.error(async error => {
+    logError(error);
+    throw error;
+});
+
 (async () => {
     // Start the app
     await app.start(process.env.PORT || 3000);
