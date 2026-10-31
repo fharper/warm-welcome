@@ -23,6 +23,7 @@ const messages = [process.env.MESSAGE, process.env.MESSAGE_2, process.env.MESSAG
         const [label, ...rest] = msg.split('|||');
         return { label: label.trim(), template: rest.join('|||').trim(), actionId: 'welcome_msg_' + i };
     });
+const welcomed = new Set();
 
 function titleCase(str) {
     str = str.toLowerCase();
@@ -51,6 +52,10 @@ function logError(error) {
 
     // team_join
     app.event('team_join', async ({ event, context }) => {
+        if (context.retryNum) {
+            return;
+        }
+
         try {
             // Retrieve the ID for the direct message to the new member
             let result = await app.client.conversations.open({
@@ -118,6 +123,12 @@ function logError(error) {
 
             const newUser = action.value.split(',');
 
+            if (welcomed.has(newUser[0])) {
+                return;
+            }
+            welcomed.add(newUser[0]);
+            let sent = false;
+
             try {
                 // Retrieve the ID for the direct message to the new member
                 let result = await app.client.conversations.open({
@@ -136,12 +147,16 @@ function logError(error) {
                     unfurl_links: false,
                     unfurl_media: false
                 });
+                sent = true;
 
                 await respond({
                     text: '*' + msg.label + '* message sent to *' + escapeSlack(newUser[1]) + '*',
                     replace_original: true
                 });
             } catch (error) {
+                if (!sent) {
+                    welcomed.delete(newUser[0]);
+                }
                 logError(error);
             }
         });
