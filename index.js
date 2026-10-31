@@ -61,6 +61,8 @@ process.on('unhandledRejection', error => {
             return;
         }
 
+        const name = event.user.real_name || event.user.profile?.display_name || event.user.name || '';
+
         try {
             // Retrieve the ID for the direct message to the new member
             let result = await app.client.conversations.open({
@@ -69,7 +71,7 @@ process.on('unhandledRejection', error => {
             });
 
             const imChannelId = result.channel.id;
-            const message = escapeSlack(event.user.real_name) + ' joined Slack!';
+            const message = escapeSlack(name || 'Someone') + ' joined Slack!';
 
             // Message the new member
             result = await app.client.chat.postMessage({
@@ -96,7 +98,7 @@ process.on('unhandledRejection', error => {
                                 },
                                 style: 'primary',
                                 action_id: msg.actionId,
-                                value: event.user.id + ',' + event.user.real_name
+                                value: event.user.id + ',' + name
                             })),
                             {
                                 type: 'button',
@@ -106,7 +108,7 @@ process.on('unhandledRejection', error => {
                                 },
                                 style: 'danger',
                                 action_id: 'cancel',
-                                value: event.user.real_name
+                                value: name
                             }
                         ]
                     }
@@ -147,7 +149,7 @@ process.on('unhandledRejection', error => {
                     token: engagementUserToken,
                     channel: imChannelId,
                     link_names: true,
-                    text: msg.template.replace('{{name}}', () => escapeSlack(titleCase(newUser[1].split(' ')[0]))),
+                    text: msg.template.replace('{{name}}', () => newUser[1] ? escapeSlack(titleCase(newUser[1].split(' ')[0])) : 'there'),
                     as_user: 'yes',
                     unfurl_links: false,
                     unfurl_media: false
@@ -155,7 +157,7 @@ process.on('unhandledRejection', error => {
                 sent = true;
 
                 await respond({
-                    text: '*' + msg.label + '* message sent to *' + escapeSlack(newUser[1]) + '*',
+                    text: '*' + msg.label + '* message sent to *' + escapeSlack(newUser[1] || 'Someone') + '*',
                     replace_original: true
                 });
             } catch (error) {
@@ -177,7 +179,7 @@ process.on('unhandledRejection', error => {
 
         try {
             await respond({
-                text: 'Message *not* sent to ' + escapeSlack(action.value),
+                text: 'Message *not* sent to ' + escapeSlack(action.value || 'Someone'),
                 replace_original: true
             });
         } catch (error) {
