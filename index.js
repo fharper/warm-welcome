@@ -75,7 +75,7 @@ process.on('unhandledRejection', error => {
         const name = event.user.real_name || event.user.profile?.display_name || event.user.name || '';
 
         try {
-            // Retrieve the ID for the direct message to the new member
+            // Open the DM with me
             let result = await app.client.conversations.open({
                 token: context.botToken,
                 users: engagementUserId
@@ -84,7 +84,7 @@ process.on('unhandledRejection', error => {
             const imChannelId = result.channel.id;
             const message = escapeSlack(name || 'Someone') + ' joined Slack!';
 
-            // Message the new member
+            // Tell me who joined, with the welcome buttons
             result = await app.client.chat.postMessage({
                 token: context.botToken,
                 channel: imChannelId,
