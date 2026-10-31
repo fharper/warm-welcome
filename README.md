@@ -26,7 +26,7 @@ When joining a community, there is nothing I find less welcoming than receiving 
 
 ### 2. Configure the .env File
 
-Copy  [.env.example](.env.example) to [.env](.env) and fill the following:
+Copy  [.env.example](.env.example) to `.env` and fill the following:
 
 | Variable | Where to find it |
 | --- | --- |
