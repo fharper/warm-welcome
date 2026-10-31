@@ -196,6 +196,16 @@ app.error(async error => {
                 });
             } catch (error) {
                 logError(error);
+
+                try {
+                    await app.client.chat.postMessage({
+                        channel: body.channel.id,
+                        thread_ts: body.message.ts,
+                        text: '⚠️ Couldn\'t open the welcome message for *' + escapeSlack(newUserName || 'Someone') + '*. Click the button again to retry.'
+                    });
+                } catch (notifyError) {
+                    logError(notifyError);
+                }
             }
         });
     });
