@@ -105,8 +105,12 @@ function logError(error) {
 
     // Listen to welcome message buttons
     messages.forEach(msg => {
-        app.action(msg.actionId, async ({ action, ack, respond }) => {
+        app.action(msg.actionId, async ({ action, body, ack, respond }) => {
             await ack();
+
+            if (body.user.id !== engagementUserId) {
+                return;
+            }
 
             const newUser = action.value.split(',');
 
@@ -140,8 +144,12 @@ function logError(error) {
     });
 
     // Listen to cancelling
-    app.action('cancel', async ({ action, ack, respond }) => {
+    app.action('cancel', async ({ action, body, ack, respond }) => {
         await ack();
+
+        if (body.user.id !== engagementUserId) {
+            return;
+        }
 
         try {
             respond({
