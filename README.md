@@ -10,7 +10,8 @@ When joining a community, there is nothing I find less welcoming than receiving 
 
 1. A new member joins your Slack workspace.
 2. You receive a DM mentioning their name and a button for each welcome message you configured.
-3. You click a button when you're online and ready — the message is sent as a DM from you, not a bot.
+3. You click a button when you're online and ready. A window opens with the message, so you can adjust it first, for example to fix their name.
+4. You click `Send`, and the message goes out as a DM from you, not a bot.
 
 ## Setup
 
@@ -58,4 +59,4 @@ The app listens on plain HTTP (port 3000, or `PORT`). Slack only sends to HTTPS 
 
 ### Testing
 
-Join your Slack community as a new user. You should receive a DM with buttons for each configured message. Click one of the message button and the new member gets your welcome message. Check your server logs if something isn't working.
+Join your Slack community as a new user. You should receive a DM with buttons for each configured message. Click one of the message buttons, then `Send` in the window that opens, and the new member gets your welcome message. Check your server logs if something isn't working.

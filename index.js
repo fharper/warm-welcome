@@ -132,7 +132,7 @@ process.on('unhandledRejection', error => {
 
     // Listen to welcome message buttons
     messages.forEach(msg => {
-        app.action(msg.actionId, async ({ action, body, ack, respond }) => {
+        app.action(msg.actionId, async ({ action, body, ack }) => {
             await ack();
 
             if (body.user.id !== engagementUserId) {
@@ -140,45 +140,94 @@ process.on('unhandledRejection', error => {
             }
 
             const [newUserId, ...nameParts] = action.value.split(',');
-            const newUser = [newUserId, nameParts.join(',')];
+            const newUserName = nameParts.join(',');
 
-            if (welcomed.has(newUser[0])) {
+            if (welcomed.has(newUserId)) {
                 return;
             }
-            welcomed.add(newUser[0]);
-            let sent = false;
+
+            const firstName = newUserName ? titleCase(newUserName.split(/[\s,]+/)[0]) : 'there';
 
             try {
-                // Retrieve the ID for the direct message to the new member
-                let result = await app.client.conversations.open({
-                    token: engagementUserToken,
-                    users: newUser[0]
-                });
-                const imChannelId = result.channel.id;
-
-                // Send the welcome message
-                result = await app.client.chat.postMessage({
-                    token: engagementUserToken,
-                    channel: imChannelId,
-                    link_names: true,
-                    text: msg.template.replace('{{name}}', () => newUser[1] ? escapeSlack(titleCase(newUser[1].split(/[\s,]+/)[0])) : 'there'),
-                    as_user: 'yes',
-                    unfurl_links: false,
-                    unfurl_media: false
-                });
-                sent = true;
-
-                await respond({
-                    text: '*' + msg.label + '* message sent to *' + escapeSlack(newUser[1] || 'Someone') + '*',
-                    replace_original: true
+                // Let me edit the message before it's sent
+                await app.client.views.open({
+                    trigger_id: body.trigger_id,
+                    view: {
+                        type: 'modal',
+                        callback_id: 'welcome_edit',
+                        private_metadata: JSON.stringify({ userId: newUserId, name: newUserName, label: msg.label, channel: body.channel.id, ts: body.message.ts }),
+                        title: { type: 'plain_text', text: 'Welcome message' },
+                        submit: { type: 'plain_text', text: 'Send' },
+                        close: { type: 'plain_text', text: 'Cancel' },
+                        blocks: [
+                            {
+                                type: 'input',
+                                block_id: 'message',
+                                label: { type: 'plain_text', text: 'Message to ' + (newUserName || 'Someone') },
+                                element: {
+                                    type: 'plain_text_input',
+                                    action_id: 'text',
+                                    multiline: true,
+                                    initial_value: msg.template.replace('{{name}}', () => firstName)
+                                }
+                            }
+                        ]
+                    }
                 });
             } catch (error) {
-                if (!sent) {
-                    welcomed.delete(newUser[0]);
-                }
                 logError(error);
             }
         });
+    });
+
+    // Listen to the edited welcome message
+    app.view('welcome_edit', async ({ ack, body, view }) => {
+        await ack();
+
+        if (body.user.id !== engagementUserId) {
+            return;
+        }
+
+        const { userId, name, label, channel, ts } = JSON.parse(view.private_metadata);
+
+        if (welcomed.has(userId)) {
+            return;
+        }
+        welcomed.add(userId);
+        let sent = false;
+
+        try {
+            // Retrieve the ID for the direct message to the new member
+            const result = await app.client.conversations.open({
+                token: engagementUserToken,
+                users: userId
+            });
+
+            // Send the welcome message
+            await app.client.chat.postMessage({
+                token: engagementUserToken,
+                channel: result.channel.id,
+                link_names: true,
+                text: view.state.values.message.text.value,
+                as_user: 'yes',
+                unfurl_links: false,
+                unfurl_media: false
+            });
+            sent = true;
+
+            const confirmation = '*' + label + '* message sent to *' + escapeSlack(name || 'Someone') + '*';
+            await app.client.chat.update({
+                channel,
+                ts,
+                text: confirmation,
+                blocks: [{ type: 'section', text: { type: 'mrkdwn', text: confirmation } }]
+            });
+        } catch (error) {
+            if (!sent) {
+                welcomed.delete(userId);
+            }
+            logError(error);
+        }
     });
 
     // Listen to cancelling
