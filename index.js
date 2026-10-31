@@ -147,7 +147,7 @@ process.on('unhandledRejection', error => {
                     token: engagementUserToken,
                     channel: imChannelId,
                     link_names: true,
-                    text: msg.template.replace('{{name}}', escapeSlack(titleCase(newUser[1].split(' ')[0]))),
+                    text: msg.template.replace('{{name}}', () => escapeSlack(titleCase(newUser[1].split(' ')[0]))),
                     as_user: 'yes',
                     unfurl_links: false,
                     unfurl_media: false
