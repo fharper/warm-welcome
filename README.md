@@ -56,13 +56,6 @@ node index.js
 
 Or with [pm2](https://github.com/Unitech/pm2) for persistence: `pm2 start index.js`
 
-#### Docker
-
-```shell
-docker build -t warm-welcome .
-docker run -p 80:8080 warm-welcome
-```
-
 ### Testing
 
 Join your Slack community as a new user. You should receive a DM with buttons for each configured message. Click one of the message button and the new member gets your welcome message. Check your server logs if something isn't working.
