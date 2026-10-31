@@ -44,6 +44,11 @@ function logError(error) {
     console.error(error.code, error.message, error.data?.error ?? '');
 }
 
+process.on('unhandledRejection', error => {
+    logError(error);
+    process.exit(1);
+});
+
 (async () => {
     // Start the app
     await app.start(process.env.PORT || 3000);
@@ -179,4 +184,7 @@ function logError(error) {
             logError(error);
         }
     });
-})();
+})().catch(error => {
+    logError(error);
+    process.exit(1);
+});
