@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-const { App } = require('@slack/bolt');
+const { App, webApi } = require('@slack/bolt');
 
 dotenv.config();
 
@@ -16,7 +16,10 @@ const app = new App({
     clientOptions: { attachOriginalToWebAPIRequestError: false }
 });
 const engagementUserId = process.env.YOUR_USER_ID;
-const engagementUserToken = process.env.YOUR_USER_TOKEN;
+const userClient = new webApi.WebClient(process.env.YOUR_USER_TOKEN, {
+    retryConfig: { retries: 0 },
+    attachOriginalToWebAPIRequestError: false
+});
 const messages = [process.env.MESSAGE, process.env.MESSAGE_2, process.env.MESSAGE_3]
     .filter(Boolean)
     .map((msg, i) => {
@@ -203,14 +206,12 @@ app.error(async error => {
 
         try {
             // Retrieve the ID for the direct message to the new member
-            const result = await app.client.conversations.open({
-                token: engagementUserToken,
+            const result = await userClient.conversations.open({
                 users: userId
             });
 
             // Send the welcome message
-            await app.client.chat.postMessage({
-                token: engagementUserToken,
+            await userClient.chat.postMessage({
                 channel: result.channel.id,
                 link_names: true,
                 text: view.state.values.message.text.value,
@@ -228,10 +229,22 @@ app.error(async error => {
                 blocks: [{ type: 'section', text: { type: 'mrkdwn', text: confirmation } }]
             });
         } catch (error) {
+            logError(error);
+
             if (!sent) {
                 welcomed.delete(userId);
+
+                // Tell me the welcome wasn't sent, under the message with the buttons
+                try {
+                    await app.client.chat.postMessage({
+                        channel,
+                        thread_ts: ts,
+                        text: '⚠️ Couldn\'t send the welcome message to *' + escapeSlack(name || 'Someone') + '*. Click the button again to retry.'
+                    });
+                } catch (notifyError) {
+                    logError(notifyError);
+                }
             }
-            logError(error);
         }
     });
 
