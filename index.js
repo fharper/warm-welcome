@@ -154,6 +154,15 @@ app.error(async error => {
             const newUserName = nameParts.join(',');
 
             if (welcomed.has(newUserId)) {
+                try {
+                    await app.client.chat.postMessage({
+                        channel: body.channel.id,
+                        thread_ts: body.message.ts,
+                        text: 'ℹ️ *' + escapeSlack(newUserName || 'Someone') + '* was already welcomed.'
+                    });
+                } catch (error) {
+                    logError(error);
+                }
                 return;
             }
 
