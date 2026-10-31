@@ -3,6 +3,13 @@ const { App } = require('@slack/bolt');
 
 dotenv.config();
 
+for (const key of ['SLACK_SIGNING_SECRET', 'SLACK_BOT_TOKEN', 'YOUR_USER_TOKEN', 'YOUR_USER_ID']) {
+    if (!process.env[key]) {
+        console.error(key + ' is missing or empty in .env');
+        process.exit(1);
+    }
+}
+
 const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET,
     token: process.env.SLACK_BOT_TOKEN,
