@@ -19,7 +19,7 @@ When joining a community, there is nothing I find less welcoming than receiving 
 
 1. Go to [Your Apps](https://api.slack.com/apps) and click `Create an app` > `From an app manifest`.
 2. Pick your workspace and click `Next`.
-3. Update [manifest.yml](manifest.yml): replace `YOUR-APP-DOMAIN-GOES.HERE` with your app's domain in `redirect_urls`, `event_subscriptions > request_url`, and `interactivity > request_url`. Optionally change the app `name`, `description`, and `display_name`.
+3. Update [manifest.yml](manifest.yml): replace `YOUR-APP-DOMAIN-GOES.HERE` with your app's domain in `event_subscriptions > request_url` and `interactivity > request_url`. Optionally change the app `name`, `description`, and `display_name`.
 4. On step 2, click `YAML`, paste the content of [manifest.yml](manifest.yml), click `Next`, then `Create`.
 5. Click `Install to Workspace`.
 

@@ -6,8 +6,6 @@ features:
     display_name: warm-welcome
     always_online: true
 oauth_config:
-  redirect_urls:
-    - https://YOUR-APP-DOMAIN-GOES.HERE/slack
   scopes:
     user:
       - chat:write
