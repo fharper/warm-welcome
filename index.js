@@ -133,7 +133,7 @@ function logError(error) {
                     unfurl_media: false
                 });
 
-                respond({
+                await respond({
                     text: '*' + msg.label + '* message sent to *' + newUser[1] + '*',
                     replace_original: true
                 });
@@ -152,7 +152,7 @@ function logError(error) {
         }
 
         try {
-            respond({
+            await respond({
                 text: 'Message *not* sent to ' + action.value,
                 replace_original: true
             });
