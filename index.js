@@ -5,7 +5,8 @@ dotenv.config();
 
 const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET,
-    token: process.env.SLACK_BOT_TOKEN
+    token: process.env.SLACK_BOT_TOKEN,
+    clientOptions: { attachOriginalToWebAPIRequestError: false }
 });
 const engagementUserId = process.env.YOUR_USER_ID;
 const engagementUserToken = process.env.YOUR_USER_TOKEN;
@@ -25,6 +26,10 @@ function titleCase(str) {
     }
 
     return str.join(' ');
+}
+
+function logError(error) {
+    console.error(error.code, error.message, error.data?.error ?? '');
 }
 
 (async () => {
@@ -87,7 +92,7 @@ function titleCase(str) {
                 ]
             });
         } catch (error) {
-            console.error(error);
+            logError(error);
         }
     });
 
@@ -122,7 +127,7 @@ function titleCase(str) {
                     replace_original: true
                 });
             } catch (error) {
-                console.error(error);
+                logError(error);
             }
         });
     });
@@ -137,7 +142,7 @@ function titleCase(str) {
                 replace_original: true
             });
         } catch (error) {
-            console.error(error);
+            logError(error);
         }
     });
 
