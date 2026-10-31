@@ -18,8 +18,6 @@
   "license": "ISC",
   "dependencies": {
     "@slack/bolt": "^4.4.0",
-    "@slack/events-api": "^3.0.1",
-    "dotenv": "^17.2.1",
-    "express": "^5.2.1"
+    "dotenv": "^17.2.1"
   }
 }
