@@ -2,6 +2,9 @@
 name: Syntax Validation
 on: [push, workflow_dispatch]
 
+permissions:
+  contents: read
+
 jobs:
   syntax-check:
     name: vale

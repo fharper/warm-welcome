@@ -7,6 +7,9 @@ on:
       - '.github/workflows/**.yml'
       - '.github/workflows/**.yaml'
 
+permissions:
+  contents: read
+
 jobs:
   github-actions-check:
     runs-on: ubuntu-latest

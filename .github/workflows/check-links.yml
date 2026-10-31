@@ -2,6 +2,9 @@
 name: Markdown Links Validation
 on: [push, workflow_dispatch]
 
+permissions:
+  contents: read
+
 jobs:
   markdown-link-check:
     runs-on: ubuntu-latest

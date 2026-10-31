@@ -2,6 +2,9 @@
 name: Validate Node.js code
 on: [push, workflow_dispatch]
 
+permissions:
+  contents: read
+
 jobs:
   nodejs-check:
     runs-on: ubuntu-latest
