@@ -38,6 +38,7 @@ for (const msg of messages) {
     }
 }
 const welcomed = new Set();
+const notified = new Set();
 
 function titleCase(str) {
     str = str.toLowerCase();
@@ -76,9 +77,10 @@ app.error(async error => {
 
     // team_join
     app.event('team_join', async ({ event, context }) => {
-        if (context.retryNum) {
+        if (notified.has(event.user.id)) {
             return;
         }
+        notified.add(event.user.id);
 
         const name = event.user.real_name || event.user.profile?.display_name || event.user.name || '';
 
@@ -134,6 +136,7 @@ app.error(async error => {
                 ]
             });
         } catch (error) {
+            notified.delete(event.user.id);
             logError(error);
         }
     });
