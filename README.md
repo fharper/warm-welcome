@@ -48,11 +48,13 @@ Each message gets its own button in the DM you receive.
 ### 3. Run the App
 
 ```shell
-npm install
+npm clean-install
 node index.js
 ```
 
 Or with [pm2](https://github.com/Unitech/pm2) for persistence: `pm2 start index.js`
+
+The app listens on plain HTTP (port 3000, or `PORT`). Slack only sends to HTTPS URLs, so put it behind something that terminates TLS, such as a reverse proxy, and point the manifest URLs at that.
 
 ### Testing
 
