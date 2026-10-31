@@ -23,6 +23,17 @@ const messages = [process.env.MESSAGE, process.env.MESSAGE_2, process.env.MESSAG
         const [label, ...rest] = msg.split('|||');
         return { label: label.trim(), template: rest.join('|||').trim(), actionId: 'welcome_msg_' + i };
     });
+
+if (messages.length === 0) {
+    console.error('Set at least one welcome message (MESSAGE) in .env');
+    process.exit(1);
+}
+for (const msg of messages) {
+    if (!msg.label || !msg.template) {
+        console.error('Each welcome message needs the format "Label|||message text" in .env');
+        process.exit(1);
+    }
+}
 const welcomed = new Set();
 
 function titleCase(str) {
