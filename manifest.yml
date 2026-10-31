@@ -17,14 +17,12 @@ oauth_config:
       - im:write
       - users:read
       - chat:write
-      - im:history
 settings:
   event_subscriptions:
     request_url: https://YOUR-APP-DOMAIN-GOES.HERE/slack/events
     user_events:
       - team_join
     bot_events:
-      - message.im
       - team_join
   interactivity:
     is_enabled: true

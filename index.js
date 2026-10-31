@@ -145,9 +145,4 @@ function logError(error) {
             logError(error);
         }
     });
-
-    // Test
-    app.message('fredisawesome', async ({ message, say }) => {
-        say('Hello');
-    });
 })();
