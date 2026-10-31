@@ -128,7 +128,8 @@ process.on('unhandledRejection', error => {
                 return;
             }
 
-            const newUser = action.value.split(',');
+            const [newUserId, ...nameParts] = action.value.split(',');
+            const newUser = [newUserId, nameParts.join(',')];
 
             if (welcomed.has(newUser[0])) {
                 return;
@@ -149,7 +150,7 @@ process.on('unhandledRejection', error => {
                     token: engagementUserToken,
                     channel: imChannelId,
                     link_names: true,
-                    text: msg.template.replace('{{name}}', () => newUser[1] ? escapeSlack(titleCase(newUser[1].split(' ')[0])) : 'there'),
+                    text: msg.template.replace('{{name}}', () => newUser[1] ? escapeSlack(titleCase(newUser[1].split(/[\s,]+/)[0])) : 'there'),
                     as_user: 'yes',
                     unfurl_links: false,
                     unfurl_media: false
