@@ -22,8 +22,6 @@ When joining a community, there is nothing I find less welcoming than receiving 
 4. On step 2, click `YAML`, paste the content of [manifest.yml](manifest.yml), click `Next`, then `Create`.
 5. Click `Install to Workspace`.
 
-> If you later change the URL in the manifest, verify the event URL by running `./node_modules/.bin/slack-verify --secret SLACK_SIGNING_SECRET` with your actual signing secret.
-
 ### 2. Configure the .env File
 
 Copy  [.env.example](.env.example) to `.env` and fill the following:
